@@ -220,8 +220,6 @@ const Component = ({
           height: height,
           backgroundImage: backgroundImage,
           backgroundSize: backgroundSize,
-          // maxHeight: "100%",
-          // maxWidth: "100%",
         }}
         onClick={() => setSelected(id)}
       />
