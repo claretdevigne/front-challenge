@@ -41,6 +41,10 @@ const App = () => {
     setMoveableComponents(newArr)
   }
 
+  const deleteAllMoveables = () => {
+    setMoveableComponents([])
+  }
+
   const handleResizeStart = (index, e) => {
     console.log("e", e.direction);
     // Check if the resize is coming from the left handle
@@ -66,6 +70,7 @@ const App = () => {
     <main style={{ height : "100vh", width: "100vw" }}>
       <button onClick={addMoveable}>Add Moveable</button>
       <button onClick={deleteMoveable}>Delete Moveable</button>
+      <button onClick={deleteAllMoveables}>Delete Moveable</button>
       <div
         id="parent"
         style={{
@@ -171,6 +176,7 @@ const Component = ({
       height: newHeight,
       backgroundImage,
       backgroundSize,
+      updateEnd: true
     });
   };
 
@@ -252,6 +258,13 @@ const Component = ({
             }); 
           }
         }}
+        // onDragEnd={(e) => {
+        //   updateMoveable(id, {
+        //     top: nodoReferencia.top,
+        //     left: nodoReferencia.left,
+        //     updateEnd: false,
+        //   })
+        // }}
         onResize={onResize}
         onResizeEnd={onResizeEnd}
         keepRatio={false}
