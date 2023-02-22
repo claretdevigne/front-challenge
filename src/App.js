@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import Moveable from "react-moveable";
 
 const App = () => {
@@ -36,10 +36,15 @@ const App = () => {
     setMoveableComponents(updatedMoveables);
   };
 
+  const deleteMoveable = () => {
+    let newArr = moveableComponents.filter(i => i.id !== selected)
+    setMoveableComponents(newArr)
+  }
+
   const handleResizeStart = (index, e) => {
     console.log("e", e.direction);
     // Check if the resize is coming from the left handle
-    const [handlePosX, handlePosY] = e.direction;
+    const [handlePosX] = e.direction; // handlePosY
     // 0 => center
     // -1 => top or left
     // 1 => bottom or right
@@ -50,8 +55,8 @@ const App = () => {
     if (handlePosX === -1) {
       console.log("width", moveableComponents, e);
       // Save the initial left and width values of the moveable component
-      const initialLeft = e.left;
-      const initialWidth = e.width;
+      // const initialLeft = e.left;
+      // const initialWidth = e.width;
 
       // Set up the onResize event handler to update the left value based on the change in width
     }
@@ -59,7 +64,8 @@ const App = () => {
 
   return (
     <main style={{ height : "100vh", width: "100vw" }}>
-      <button onClick={addMoveable}>Add Moveable1</button>
+      <button onClick={addMoveable}>Add Moveable</button>
+      <button onClick={deleteMoveable}>Delete Moveable</button>
       <div
         id="parent"
         style={{
@@ -185,10 +191,9 @@ const Component = ({
     const newPositionTop = top;
     const newPositionLeft = left;
 
-    const { lastEvent } = e;
-    const { drag } = lastEvent;
+    // const { lastEvent } = e;
+    // const { drag } = lastEvent;
     // const { beforeTranslate } = drag;
-
     // const absoluteTop = top + beforeTranslate[1];
     // const absoluteLeft = left + beforeTranslate[0];
 
@@ -229,13 +234,23 @@ const Component = ({
         resizable
         draggable
         onDrag={(e) => {
-          updateMoveable(id, {
-            top: e.top,
-            left: e.left,
-            width,
-            height,
-            backgroundImage,
-          });
+          const containerRect = parent.getBoundingClientRect();
+          const movableRect = e.target.getBoundingClientRect();
+
+          const isOutside = movableRect.left < containerRect.left ||
+                    movableRect.right > containerRect.right ||
+                    movableRect.top < containerRect.top ||
+                    movableRect.bottom > containerRect.bottom;
+
+          if (!isOutside) {
+            updateMoveable(id, {
+              top: e.top,
+              left: e.left,
+              width,
+              height,
+              backgroundImage,
+            }); 
+          }
         }}
         onResize={onResize}
         onResizeEnd={onResizeEnd}
