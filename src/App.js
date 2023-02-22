@@ -70,7 +70,7 @@ const App = () => {
     <main style={{ height : "100vh", width: "100vw" }}>
       <button onClick={addMoveable}>Add Moveable</button>
       <button onClick={deleteMoveable}>Delete Moveable</button>
-      <button onClick={deleteAllMoveables}>Delete Moveable</button>
+      <button onClick={deleteAllMoveables}>Delete All Moveables</button>
       <div
         id="parent"
         style={{
