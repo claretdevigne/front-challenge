@@ -5,9 +5,13 @@ const App = () => {
   const [moveableComponents, setMoveableComponents] = useState([]);
   const [selected, setSelected] = useState(null);
 
-  const addMoveable = () => {
+  const addMoveable = async () => {
     // Create a new moveable component and add it to the array
     const COLORS = ["red", "blue", "yellow", "green", "purple"];
+
+    const response = await fetch("https://jsonplaceholder.typicode.com/photos");
+    const data = await response.json();
+    const randomImage = data[Math.floor(Math.random() * data.length)].url;
 
     setMoveableComponents([
       ...moveableComponents,
@@ -17,8 +21,9 @@ const App = () => {
         left: 0,
         width: 100,
         height: 100,
-        color: COLORS[Math.floor(Math.random() * COLORS.length)],
-        updateEnd: true
+        // color: COLORS[Math.floor(Math.random() * COLORS.length)],
+        backgroundImage: `url(${randomImage})`,
+        updateEnd: true,
       },
     ]);
   };
@@ -90,7 +95,8 @@ const Component = ({
   width,
   height,
   index,
-  color,
+  // color,
+  backgroundImage,
   id,
   setSelected,
   isSelected = false,
@@ -104,7 +110,8 @@ const Component = ({
     width,
     height,
     index,
-    color,
+    // color,
+    backgroundImage,
     id,
   });
 
@@ -129,7 +136,8 @@ const Component = ({
       left,
       width: newWidth,
       height: newHeight,
-      color,
+      // color,
+      backgroundImage,
     });
 
     // ACTUALIZAR NODO REFERENCIA
@@ -178,7 +186,8 @@ const Component = ({
         left: absoluteLeft,
         width: newWidth,
         height: newHeight,
-        color,
+        // color,
+        backgroundImage,
       },
       true
     );
@@ -196,7 +205,7 @@ const Component = ({
           left: left,
           width: width,
           height: height,
-          background: color,
+          backgroundImage: backgroundImage,
         }}
         onClick={() => setSelected(id)}
       />
@@ -211,7 +220,8 @@ const Component = ({
             left: e.left,
             width,
             height,
-            color,
+            // color,
+            backgroundImage,
           });
         }}
         onResize={onResize}
