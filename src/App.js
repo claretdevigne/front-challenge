@@ -7,8 +7,6 @@ const App = () => {
 
   const addMoveable = async () => {
     // Create a new moveable component and add it to the array
-    const COLORS = ["red", "blue", "yellow", "green", "purple"];
-
     const response = await fetch("https://jsonplaceholder.typicode.com/photos");
     const data = await response.json();
     const randomImage = data[Math.floor(Math.random() * data.length)].url;
@@ -21,7 +19,6 @@ const App = () => {
         left: 0,
         width: 100,
         height: 100,
-        // color: COLORS[Math.floor(Math.random() * COLORS.length)],
         backgroundImage: `url(${randomImage})`,
         updateEnd: true,
       },
@@ -69,6 +66,7 @@ const App = () => {
           background: "black",
           height: "80vh",
           width: "80vw",
+          overflow: "hidden"
         }}
       >
         {moveableComponents.map((item, index) => (
@@ -95,7 +93,6 @@ const Component = ({
   width,
   height,
   index,
-  // color,
   backgroundImage,
   id,
   setSelected,
@@ -110,7 +107,6 @@ const Component = ({
     width,
     height,
     index,
-    // color,
     backgroundImage,
     id,
   });
@@ -136,7 +132,6 @@ const Component = ({
       left,
       width: newWidth,
       height: newHeight,
-      // color,
       backgroundImage,
     });
 
@@ -186,7 +181,6 @@ const Component = ({
         left: absoluteLeft,
         width: newWidth,
         height: newHeight,
-        // color,
         backgroundImage,
       },
       true
@@ -206,6 +200,8 @@ const Component = ({
           width: width,
           height: height,
           backgroundImage: backgroundImage,
+          maxHeight: "100%",
+          maxWidth: "100%",
         }}
         onClick={() => setSelected(id)}
       />
@@ -220,7 +216,6 @@ const Component = ({
             left: e.left,
             width,
             height,
-            // color,
             backgroundImage,
           });
         }}
