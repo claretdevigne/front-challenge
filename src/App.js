@@ -20,6 +20,7 @@ const App = () => {
         width: 100,
         height: 100,
         backgroundImage: `url(${randomImage})`,
+        backgroundSize: 'cover',
         updateEnd: true,
       },
     ]);
@@ -94,6 +95,7 @@ const Component = ({
   height,
   index,
   backgroundImage,
+  backgroundSize,
   id,
   setSelected,
   isSelected = false,
@@ -108,6 +110,7 @@ const Component = ({
     height,
     index,
     backgroundImage,
+    backgroundSize,
     id,
   });
 
@@ -118,31 +121,30 @@ const Component = ({
     // ACTUALIZAR ALTO Y ANCHO
     let newWidth = e.width;
     let newHeight = e.height;
-
+      
     const positionMaxTop = top + newHeight;
     const positionMaxLeft = left + newWidth;
 
     if (positionMaxTop > parentBounds?.height)
       newHeight = parentBounds?.height - top;
+
     if (positionMaxLeft > parentBounds?.width)
       newWidth = parentBounds?.width - left;
-
-    updateMoveable(id, {
-      top,
-      left,
-      width: newWidth,
-      height: newHeight,
-      backgroundImage,
-    });
 
     // ACTUALIZAR NODO REFERENCIA
     const beforeTranslate = e.drag.beforeTranslate;
 
-    ref.current.style.width = `${e.width}px`;
-    ref.current.style.height = `${e.height}px`;
+    ref.current.style.width = `${newWidth}px`;
+    ref.current.style.height = `${newHeight}px`;
 
     let translateX = beforeTranslate[0];
     let translateY = beforeTranslate[1];
+
+    if (positionMaxTop > parentBounds?.height)
+      newHeight = parentBounds?.height - top - newHeight;
+
+    if (positionMaxLeft > parentBounds?.width)
+      newWidth = parentBounds?.width - left - newWidth;
 
     ref.current.style.transform = `translate(${translateX}px, ${translateY}px)`;
 
@@ -152,6 +154,17 @@ const Component = ({
       translateY,
       top: top + translateY < 0 ? 0 : top + translateY,
       left: left + translateX < 0 ? 0 : left + translateX,
+      width: newWidth,
+      height: newHeight,
+    });
+
+    updateMoveable(id, {
+      top: top + translateY < 0 ? 0 : top + translateY,
+      left: left + translateX < 0 ? 0 : left + translateX,
+      width: newWidth,
+      height: newHeight,
+      backgroundImage,
+      backgroundSize,
     });
   };
 
@@ -164,24 +177,30 @@ const Component = ({
 
     if (positionMaxTop > parentBounds?.height)
       newHeight = parentBounds?.height - top;
+
     if (positionMaxLeft > parentBounds?.width)
       newWidth = parentBounds?.width - left;
 
+    
+    const newPositionTop = top;
+    const newPositionLeft = left;
+
     const { lastEvent } = e;
     const { drag } = lastEvent;
-    const { beforeTranslate } = drag;
+    // const { beforeTranslate } = drag;
 
-    const absoluteTop = top + beforeTranslate[1];
-    const absoluteLeft = left + beforeTranslate[0];
+    // const absoluteTop = top + beforeTranslate[1];
+    // const absoluteLeft = left + beforeTranslate[0];
 
     updateMoveable(
       id,
       {
-        top: absoluteTop,
-        left: absoluteLeft,
+        top: newPositionTop < 0 ? 0 : newPositionTop,
+        left: newPositionLeft < 0 ? 0 : newPositionLeft,
         width: newWidth,
         height: newHeight,
         backgroundImage,
+        backgroundSize,
       },
       true
     );
@@ -200,8 +219,9 @@ const Component = ({
           width: width,
           height: height,
           backgroundImage: backgroundImage,
-          maxHeight: "100%",
-          maxWidth: "100%",
+          backgroundSize: backgroundSize,
+          // maxHeight: "100%",
+          // maxWidth: "100%",
         }}
         onClick={() => setSelected(id)}
       />
